@@ -1,0 +1,12 @@
+from bs4 import BeautifulSoup as soup
+from urllib.request import urlopen as uReq
+
+my_url='https://egypt.souq.com/eg-ar/phone/s/?as=1&section=2&page=1'
+
+myclient=uReq(my_url)
+htmlpage= myclient.read()
+myclient.close()
+soupedpage=soup(htmlpage , "html.parser")
+containers = soupedpage.findAll("div",{"class":"tpl-results"})
+container = containers[2]
+print(container.div)
