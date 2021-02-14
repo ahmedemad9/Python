@@ -1,0 +1,77 @@
+#!/usr/bin/python3 
+
+import csv
+import numpy as np
+import pandas as pd
+import matplotlib as plt
+from sklearn.impute import SimpleImputer as sip
+from sklearn.preprocessing import OneHotEncoder, LabelEncoder , StandardScaler
+from sklearn.compose import ColumnTransformer
+from sklearn.model_selection import train_test_split
+
+#read file and split to dependant and independant
+dataset = pd.read_csv('train.csv')
+
+
+
+#fill nan values by mean
+
+dataset.iloc[: , 6:9 ]= sip(missing_values=np.nan,strategy='mean').fit_transform(dataset.iloc[: , 6:9 ])
+
+dataset['Married'] = dataset['Married'].fillna(dataset['Married'].dropna().mode().values[0])
+dataset['Gender'] = dataset['Gender'].fillna(dataset['Gender'].dropna().mode().values[0])
+dataset['Loan_Amount_Term'] = dataset['Loan_Amount_Term'].fillna(dataset['Loan_Amount_Term'].dropna().mode().values[0])
+dataset['Dependents'] = dataset['Dependents'].fillna(dataset['Dependents'].dropna().mode().values[0])
+dataset['LoanAmount'] = dataset['LoanAmount'].fillna(dataset['LoanAmount'].dropna().mode().values[0])
+dataset['Self_Employed'] = dataset['Self_Employed'].fillna(dataset['Self_Employed'].dropna().mode().values[0])
+dataset['Credit_History'] = dataset['Credit_History'].fillna(dataset['Credit_History'].dropna().mode().values[0])
+dataset['Property_Area'] = dataset['Property_Area'].fillna(dataset['Property_Area'].dropna().mode().values[0])
+
+x = dataset.iloc[:,1:-1].values
+y = dataset.iloc[:,-1:].values
+
+"""
+#count nan
+total = dataset.isnull().sum().sort_values(ascending=False)
+percent = (dataset.isnull().sum()/dataset.isnull().count()).sort_values(ascending=False)*100
+missing_data = pd.concat([total, percent], axis=1, keys=['Total', 'Percent'])
+missing_data.head(20)
+print("total :\n",missing_data)
+"""
+
+
+#encode x to zeroes and ones
+
+#ct.fit_transform(xi)
+labelencoder=LabelEncoder()
+x[:,0]=labelencoder.fit_transform(x[:,0])
+"""
+x[:,1]=labelencoder.fit_transform(x[:,1])
+
+x[:,4]=labelencoder.fit_transform(x[:,4])
+
+x[:,-1]=labelencoder.fit_transform(x[:,-1])
+
+ct= ColumnTransformer([("Property_Area", OneHotEncoder(), [-1])], remainder = 'passthrough')
+x=ct.fit_transform(x)
+"""
+#encode y to zeroes and ones
+LE=LabelEncoder()
+LE1=LabelEncoder()
+#x[0]=LE.fit_transform(x[0])
+y=LE1.fit_transform(y)
+
+outputs=pd.DataFrame(x).to_csv('output1.csv')
+
+print("dataset:\n",dataset)
+print("x:\n" ,x)
+"""
+print("x_train before scaling:\n" , x_train)
+
+print("x_test before scaling:\n" , x_test)
+
+#scale x and y to make them meaningful in calculations
+SS=ss()
+x_train = SS.fit_transform(x_train)
+x_test = SS.transform(x_test)
+"""

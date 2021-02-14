@@ -1,0 +1,43 @@
+#!/usr/bin/python3 
+
+import csv
+import numpy as np
+import pandas as pd
+import matplotlib as plt
+from sklearn.impute import SimpleImputer as sip
+from sklearn.preprocessing import OneHotEncoder as ohe, LabelEncoder as le, StandardScaler as ss
+from sklearn.compose import ColumnTransformer as ct
+from sklearn.model_selection import train_test_split as tts
+
+dataset = pd.read_csv('Data.csv')
+x = dataset.iloc[:,0:-1].values
+y = dataset.iloc[:,3].values
+
+x[: , 1: ]= sip(missing_values=np.nan,strategy='mean').fit_transform(x[: , 1: ])
+
+print("dataset:\n" , dataset)
+
+x = ct([('Country', ohe(), [0])], remainder = 'passthrough').fit_transform(x)
+
+y=le().fit_transform(y)
+
+x_train , x_test , y_train , y_test = tts(x,y,test_size=0.2,random_state=0)
+
+print("x:\n" ,x)
+
+print("x_train before scaling:\n" , x_train)
+
+print("x_test before scaling:\n" , x_test)
+
+x_train = ss().fit_transform(x_train)
+x_test = ss().fit_transform(x_test)
+
+print("x_train after sclaing:\n" , x_train)
+
+print("x_test after scaling:\n" , x_test)
+
+print("y:\n" ,y)
+
+print("y_train:\n" ,y_train)
+
+print("y_test:\n" ,y_test)
